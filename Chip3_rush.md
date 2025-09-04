@@ -34,3 +34,149 @@ I forgot the compression unit works at 40 MHz instead of 20 MHz...
 Will have to fix this....
 
 In the mean time, I do not know if this is the correct behaviour for the unit...
+
+## 28 Aug
+
+I realised that my IO cells view were not the correct view and cannot be used for tape out...
+
+And also, I just found this [paper](https://www.scirp.org/journal/paperinformation?paperid=55133) that talks about designing a SerDes using UMC 180 nm, which could be really handy.
+
+They basically used the following block diagram to build a 3 stage encoder serialiser, where DETFF means double edge triggered flip flop
+
+![three_stage_encoder_serialiser design using 7 DETFF](./img/3_stage_double_edge_trigger_flip_flop_serialiser_design.png)
+
+
+
+## 1 Sep
+
+I think my plan so far involves the very simple re-implementation of the encoder. This will be the baseline task.
+
+DFT scan chain will be inserted.
+
+To avoid the assign problems with encoder, it is possible to insert buffer during synthesis.
+
+This can be achieved by giving the command in tcl:
+
+```tcl
+set_remove_assign_options -verbose
+set_db remove_assigns true
+```
+
+ 
+In this design I defined the scan test clock as 1 MHz with the command below:
+
+```tcl
+## unit is ps in this case
+define_test_clock -name test_clk -period 1000000 clk
+
+## when test is on, rst_n should be 1
+define_test_mode -name rst_n -active high rst_n
+
+## when se is high, it is shifting
+define_shift_enable -name se -active high se
+
+## define the scan chain to be working in the domain of test_clock
+define_scan_chain -sdi scan_in -sdo scan_out -domain test_clk -name encoder_chain
+```
+
+Made the implementation of the layout for this Encoder
+
+
+## 2 Sep
+
+Now I will need to import the GDS back to Virtuoso and verify the gate-level behaviour in Xcelium.
+
+Behaviour level for synthesised gate-level simulation proves to be correct. 
+
+Just need to remember at the final integration to add reset synchronisation.
+
+Will now simulate pnr level gate-level simulation to see how it behaves.
+
+The behaviour has been verified to be correct for pnr gate-level simulation.
+
+I tried to arrange the LVDS module and IO module on the same line and see the size difference on this case.
+
+Still Do not know how to connect the LVDS for the power supply yet...
+
+
+
+## 3 Sep
+
+I will have a close look at PLL today and see how to simulate the module and what its behaviour is like and see how to integrate the module.
+
+
+
+So if we have the size of chip including bond pad at the size of 1525 x 1525, and we are using bond pad of 65 x 65, which essentially takes 69 x 79 um.
+
+which leaves the total chip size to 1367 x 1367 um
+
+
+So it appears that the PLL macro will have the IO cells built in and comes with its own powercut cell:
+
+![PLL IP macro and its ports rough floor plan](./img/Very_rough_floorplan_or_the_port_FXPLLH031_APGD_with_its_own_IO_cells_embedded.png)
+
+
+As for the placement of the IP block, it will have to be placed in the preferred corner or centre of the side according to the manual:
+
+![Recommended placement of the IP PLL FXPLLH031HA0A_APGD](./img/Recommended_PLL_placement_given_that_its_IO_cells_are_embedded_either_on_corner_or_centre.png)
+
+
+## 4 Sep
+
+Also just got confirmed by Steve that our chip will be at the size of 1484.92 x 1484.92 um
+
+And I have also managed to get the simulation of the PLL working.
+
+
+### Normal mode
+
+
+If the module works in normal mode, the following configurations are needed:
+
+```text
+FRANGE: 0 (CKOUT = 20 - 100 MHz) OR 1 (CKOUT = 100 - 300 MHz)
+TEST: 0
+NS/MS: divider parameter
+
+
+PDN: active low, if set, it should be longer than 4 ns. 
+
+CIN = CKOUT
+```
+
+
+
+The following images show the simulation of the waveform of the PLL generating clock with the set up of N = 16 and M = 8, which results in the output frequency half of the input ref frequency.
+
+![The acquisition time of 500 us needed in the simulation](./img/NORMAL_mode_of_FXPLLH031HA0A_APGD_with_500us_acquisition_time_of_the_module_before_clock_can_be_generated.png)
+
+![Zoomed in the output frequency of clock CKOUT to be half of the input clock fref](./img/NORMAL_mode_FXPLLH031HA0A_APGD_successfully_produce_half_of_the_original_input_clock_frequency.png)
+
+In the meantime, the TCKO should be running at 1/16 clock frequency of the output clock CKO, which should be 640 ns.
+
+![It can be observed that the output clock of the test clock should be 1/16 of the output clock CKOUT](./img/NORMAL_MODE_where_TCKO_should_be_1_16_of_the_output_clock_CKOUT.png)
+
+
+### Self-test mode
+
+Following set up is needed to configure the PLL
+
+```text
+TEST: 1
+
+PDN: Pulse set up
+```
+
+
+
+This is the self-test mode, where N = 16, and M = 1, which should produce 16 times the original clock frequency, but the test clock has been divided by 16 from the generate clock. Therefore, the test output clock TSCKO should have the same clock frequency as input test clock TCKI.
+
+In the meantime, the CKOUT port has been shorted by FREF, so the output clock CKOUT should be the same as FREF.
+
+![Just as expected, no matter if it is test mode or normal mode, it both takes the acquisition time to set up the module](./img/TEST_mode_of_FXPLLH031HA0A_APGD_successfully_giving_the_same_clock_frequency_of_the_test_input_clock_TCKI_after_acquisition_time.png)
+
+
+### Constructing the test chips
+
+I will now try to do some planning about what we want from chip 3.
+
