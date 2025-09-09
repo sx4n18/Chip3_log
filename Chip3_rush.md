@@ -12,9 +12,13 @@ First of all, I will try to generate this module's layout and optimise the port 
 
 LVDS module can be simulated with the provided! Just make sure the input are correctly set!
 
-**VBG** should be set at 1.2 V for the band gap reference.
-**EN** should be set at 1, and the module will only start waking up after this has been set at 1, the wake up time is about **1 ms**
-**RS** this decides if the module is working at power down mode, 0 for power down, 1 for normal working.
++ **VBG** should be set at 1.2 V for the band gap reference.
++ **EN** should be set at 1, and the module will only start waking up after this has been set at 1, the wake up time is about **1 ms**, when **EN** was set to 0, it will be power-down mode. 
++ **RS** is the output swing control pin, not sure what it does to be exact...
+
+
+**Edit: RS pin decides how much swing we will have for the output voltage, it will be 0.35V when RS=1 or 0.25V when RS=0**
+
 
 In the meantime, the LVDS module is an IO cell itself, so it does not require more IO cells. 
 
@@ -179,4 +183,35 @@ In the meantime, the CKOUT port has been shorted by FREF, so the output clock CK
 ### Constructing the test chips
 
 I will now try to do some planning about what we want from chip 3.
+
+
+## 8 Sep
+
+I have been looking into the construction of serialiser to see how I can make it work without the complexity of introducing multiple clocks within a module.
+
+Now I just made a very simple serialiser, which has an internal index that increments on the main clock.
+
+And then output the data depending on the index.
+
+I have tried other ways to implement it, but did not manage to make it work.
+
+
+I have just integrated the counter, the serialiser and LVDSTX module together to run the simulation, and this is what it looks like:
+
+![Simulation for the counter, serialiser and LVDS TX module](./img/Simulation_that_integrates_counter_serialiser_and_LVDSTX_module.png)
+
+
+As for proper encoding to embed the clock into the data stream, this will be checked and explored later in the design.
+
+The following encoding has been recommended:
+
+```csharp
+[preamble] = 64 bits of alternating 1/0  (1010...)
+[sync_word] = 16-bit unique pattern (e.g. 0xB5E3)
+[rate_id] = 8-bit code (enumerated rates: 0x01=300MHz, 0x02=320MHz, 0x03=600MHz, etc.)
+[flags/ctrl] = 8-bit (optional)
+[payload_len] = 16-bit
+[payload] = N bytes...
+[crc32] = 32-bit
+```
 
