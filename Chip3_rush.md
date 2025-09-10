@@ -215,3 +215,73 @@ The following encoding has been recommended:
 [crc32] = 32-bit
 ```
 
+
+## 9 Sep
+
+I have just been trying to figure out the layout relationship or floorplan for the whole chip, and realised we cannot put both IP block in the limited size chip 3 has to offer.
+
+Try out of the IP block placement:
+
+![The placement of both IP blocks show that almost 1/3 of the space will be taken by LVDS and PLL ](./img/placement_of_both_LVDS_and_PLL_in_the_chip3_layout.png)
+
+The best we could do right now is to forget about putting both cells in I guess, and purely test our PLL...
+
+Or put my old design of encoder in it???
+
+Now I am determined to get one design of PLL only done if possible!
+
+This will be my baseline submission.
+
+
+let's make it clear what tests we are looking for form the PLL:
+
+1. Built-in test logic, where **TEST = 1**
+2. Test on the normal mode where **TEST = 0**
+3. Clock doubler and how that works, where **TEST = 0**
+
+Configuration for test 1 is listed here:
+
+```
+INPUT:
+
+TEST = 1
+TCKI = 5 - 20 MHz
+PLL_NMSX_sel = 'X'
+FREF = 'X'
+FRANGE = 'X'
+PLL_PDN = 'X'
+
+
+
+OUTPUT:
+
+CKOUT = FREF
+TCKO = (16/16)*TCKI
+```
+
+Configuration for test 2 is listed here:
+
+```
+INPUT:
+
+TEST = 0
+TCKI = 'X'
+PLL_NMSX_sel = '1'
+FREF = 5- 20 MHZ
+FRANGE = '1'
+NS/MS = 16
+PLL_PDN = '1'
+
+OUTPUT:
+
+CKOUT = (N/M)*FREF
+TCKO = CKOUT/16
+```
+
+
+
+## 10 Sep
+
+I am now trying to have a baseline design done with just PLL and maybe clock doubler and divider....
+
+
