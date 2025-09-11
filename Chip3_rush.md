@@ -285,3 +285,51 @@ TCKO = CKOUT/16
 I am now trying to have a baseline design done with just PLL and maybe clock doubler and divider....
 
 
+## 11 Sep
+
+Piotr suggested the mutiplexing for the system clock like the following:
+
+```verilog
+wire sys_clk;
+input EXT_clk;
+mux3 i_mux3 (.O(sys_clk), .S0(mclk_sel[0]), .S1(mclk_sel[1]), .A(pll_out), .B(clk_600m), .C(EXT_clk));
+```
+
+But to think about it, there is no other component in the design that will require a slow external clock.
+
+Both my serialiser and counter will run at the clock of 300 MHz.
+
+So I do not really see the point of having both high spped clock and normal clock muxed together.
+
+But to observe our high spped possibly 600MHz clock, we can seperate the from the main design.
+
+so, we can just remove the extra external clock input 
+
+```verilg
+wire sys_clk;
+wire pll_out_buf;
+
+
+pll inst_pll(
+	.CKOUT(pll_out),
+	.CKIN(pll_out_buf),
+	.FREF(FREF)
+	);
+
+BUF4CK I_BUF4X(.O(pll_out_buf), .I(pll_out));
+
+DFF I_DFF(.Q(xx), .CK(pll_out_buf), .D(xx));
+
+mux2 i_mux2 (.O(clk_mon), .S(mclk_sel), .A(pll_out), .B(clk_600m));
+```
+
+I have now finally composed the overall architecture of the module with the components I have.
+
+And the behaviour so far has been correct for the normal mode.
+
+
+
+I think I have managed to get the simulation working with just purely the PLL and relevant clock circuitry.
+
+But I still do not have the clock doubler.
+
