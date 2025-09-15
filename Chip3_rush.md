@@ -334,6 +334,7 @@ I think I have managed to get the simulation working with just purely the PLL an
 But I still do not have the clock doubler.
 
 
+<<<<<<< HEAD
 ## 12 Sep
 
 I have verified the normal function behaviour for the structured design, now I will draft the testbench for the module to do Built-in self test and also test on functional mode (where users will identify the parameter N, M themselves)
@@ -356,4 +357,26 @@ Now the testbench has also tested other two test cases.
 One is the functional mode with fixed M/M = 15/1 (15), the other is the functional mode with shifted in N/M, which has been set as 24/4 (6). 
 
 These two have also been verified to be correct.
+=======
+
+## 15 Sep
+
+Today I will at least make the synthesis work for the current design.
+
+But the unsynthesisable design in the verilog netlist are the clock doubler.
+
+Given that a lot of the circuitry in the proposed design cannot be done in the general digital flow, I will have to split them into blocks and apply different methodology.
+
+
+The first bit I am gonna do is the clock configuration circuitry, which is the block that is encapsulated in green box:
+
+![](./img/)
+
+
+I will start drafting the verilog for it now.
+
+OK, I have finished the synthesis for this block, and this has also been verified by the gate-level simulation.
+
+Will start the layout implementation soon.
+>>>>>>> 87030fa597bc09127c461363e3c81dbbaaddcc1d
 
