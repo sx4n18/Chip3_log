@@ -333,3 +333,27 @@ I think I have managed to get the simulation working with just purely the PLL an
 
 But I still do not have the clock doubler.
 
+
+## 12 Sep
+
+I have verified the normal function behaviour for the structured design, now I will draft the testbench for the module to do Built-in self test and also test on functional mode (where users will identify the parameter N, M themselves)
+
+
+**Disclaimer: clock doubler may have a very strong application condition**
+
+I also just realised that the clock doubler may be simple design, but it should only be designed to accustomed to a certain clock frequency.
+
+This would only mean that is the output system clock from PLL is not 300 MHz, the clock doubler may not work.
+
+So the whole implementation will not make much sense.
+
+![The BIST mode of the PLL that should generate an output clock rate same as the input fref/tcki](./img/BIST_TEST_MODE_OF_THE_PLL_WHERE_OUTPUT_CLK_SHOULD_BE_THE_SAME_AS_THE_INPUT_FREF.png)
+
+But because the clock doubler only works for 300 MHz, the doubled clock may not have the correct duty cycle or even correct behaviour.
+
+Now the testbench has also tested other two test cases.
+
+One is the functional mode with fixed M/M = 15/1 (15), the other is the functional mode with shifted in N/M, which has been set as 24/4 (6). 
+
+These two have also been verified to be correct.
+
