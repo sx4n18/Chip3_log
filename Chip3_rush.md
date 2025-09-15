@@ -333,3 +333,25 @@ I think I have managed to get the simulation working with just purely the PLL an
 
 But I still do not have the clock doubler.
 
+
+
+## 15 Sep
+
+Today I will at least make the synthesis work for the current design.
+
+But the unsynthesisable design in the verilog netlist are the clock doubler.
+
+Given that a lot of the circuitry in the proposed design cannot be done in the general digital flow, I will have to split them into blocks and apply different methodology.
+
+
+The first bit I am gonna do is the clock configuration circuitry, which is the block that is encapsulated in green box:
+
+![](./img/)
+
+
+I will start drafting the verilog for it now.
+
+OK, I have finished the synthesis for this block, and this has also been verified by the gate-level simulation.
+
+Will start the layout implementation soon.
+
