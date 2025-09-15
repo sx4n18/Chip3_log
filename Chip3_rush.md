@@ -370,7 +370,7 @@ Given that a lot of the circuitry in the proposed design cannot be done in the g
 
 The first bit I am gonna do is the clock configuration circuitry, which is the block that is encapsulated in green box:
 
-![](./img/)
+![Decision about the partitioning for different methodology has been established](./img/partitioning_of_the_design_with_different_methodology.png)
 
 
 I will start drafting the verilog for it now.
