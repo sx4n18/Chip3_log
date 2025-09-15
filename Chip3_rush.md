@@ -380,3 +380,24 @@ OK, I have finished the synthesis for this block, and this has also been verifie
 Will start the layout implementation soon.
 >>>>>>> 87030fa597bc09127c461363e3c81dbbaaddcc1d
 
+Okay, due to the logic simplicity, Genus has generated a netlist that contains scan flip flop when I actually dont need one.
+
+I will need to redo synthesis now....
+
+Finished another synthesis, and now the module no longer includes any scan cells.
+
+I used the following command to achive this:
+
+```tcl 
+set_dont_use [get_lib_cells */DBZ*]
+set_dont_use [get_lib_cells */DFZ*]
+set_dont_use [get_lib_cells */QDFZ*]
+```
+
+The mentioned commands will avoid using these cells to syntehsis the design.
+
+
+Also the new deisgn wihtout scan cells are now imported into innovus, and floorplan, powerplan, and basic placement have been done.
+
+CTS and detailed routing will be left tomorrow.
+
