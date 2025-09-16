@@ -401,3 +401,28 @@ Also the new deisgn wihtout scan cells are now imported into innovus, and floorp
 
 CTS and detailed routing will be left tomorrow.
 
+
+## 16 Sep
+
+Just did CTS, and I think this has happned a lot during my experience with UMC kit, it keeps padding a lot of clock buffers before registers and they are all the smallest clock buffers. I am not sure if it is due to the limit of the size and maybe unreasonable set of constraints?
+
+Due to the size limit, it can only fit the small clock buffer, so the tool used BUF1CK.
+
+Due to the input delay set, the clock needs to be padded to be almost synced to the data input.
+
+And due to the only area available, the routing ended up with a lot of DRC violations.
+
+I think I will need to reconsider the constraints set up in the design.
+
+After reviewing the input delay and output delay definition, I think I will redo synthesis.
+
+And also, I do not want the clock buffer to be used in the logic design, so I will set them as dont use.
+
+Okay, I finished the layout design for one module, PLL_config. 
+
+Will now export the design as it is into virtuoso.
+
+I have finally finished the layout design for PLL_config, and this has also been imported into virtuoso.
+
+Will now move on to the design for a 2-bit counter that works at 300MHz.
+
