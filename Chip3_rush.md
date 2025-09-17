@@ -426,3 +426,37 @@ I have finally finished the layout design for PLL_config, and this has also been
 
 Will now move on to the design for a 2-bit counter that works at 300MHz.
 
+
+## 17 Sep
+
+Since I have finished the PLL configuration circuit done, I will now do the design for the counter that works at 300MHz.
+
+The RTL and simulation has been done, and the behaviour are listed below:
+
+```
+
+2-bit counter increments over 300MHz clock;
+Output is either 
+(0) clk_300m, 
+(1) or counter [0], 
+(2) or counter [1],
+(3) or counter[0]||counter[1] 
+
+```
+
+and this has been synthesised into just 4 standard cells.
+
+Okay, thank goodness Steve will take over the layout work for LVDS feedin logic with more control over the output logic.
+
+That was a huge relief.
+
+I will now verify the gate-level behaviour.
+
+Okay, gate-level simulation has been verified to be working well.
+
+![Gate level simulation with delay inserted has passed the naked eye examine for behaivour](/home/j05003sx/MD_log/Chip3_rush/img/gate_level_simulation_of_the_design_for_counter_300MHZ_and_muxed_by_select_signals.png)
+
+
+So when it comes to pins, I think I get to have max 18 pins, which should be enough for our case.
+
+ 
