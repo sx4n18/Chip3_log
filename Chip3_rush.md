@@ -460,3 +460,71 @@ Okay, gate-level simulation has been verified to be working well.
 So when it comes to pins, I think I get to have max 18 pins, which should be enough for our case.
 
  
+## 18 Sep
+
+I now have the basic placement ready I think, I will now get down to routing.
+
+And also I added 2 extra cells last night, VCCK and GNDK.
+
+They will be reflected in the schematic.
+
+and I have now finally finished my PLL bit of circuitry 
+
+![The overall layout of the PLL half side of the chip](./img/PLL_and_configurator_design_integrated_together_in_the_layout.png)
+
+And I have also verified the PLL_config circuitry in the transient simulation:
+
+It looks decent, even tho I did not add much load on it.
+
+
+## 19 Sep
+
+Today marks the end of the layout designing work, and now we are moving to the work of post-layout checks.
+
+I also just manged to make PVS work with the provided files.
+
+As for the LVS settings:
+
+
+**Technology mapping file should be set as this:**
+
+```
+/eda/design_kits/UMC180/MM_RF/RuleDecks/PVS/180nm_layers_v2.7.pvl
+```
+
+**and the LVS rule file should be set as :**
+
+```
+/eda/design_kits/UMC180/MM_RF/RuleDecks/PVS/G-DF-MIXED_MODE_RFCMOS18-1.8V_3.3V-MMC_PVS-LVS-2.1-P1/G-DF-MIXED_MODE_RFCMOS18-1.8V_3.3V-1P6M-MMC_PVS-LVS-2.1-P1.txt
+```
+
+and I have managed to make it work for my digital bits with the following command to make vdd!: (gnd!:) to be recognised as vdd (gnd)
+
+```
+lvs_cpoint "vdd!:" vdd
+lvs_cpoint "gnd!:" gnd
+```
+
+and this rule is not included in the "Include PVL" tab, one shoudl add these 2 lines in a file and give it a name with extension of pvl or rul
+
+
+But I cannot make the QRC work...
+
+
+Okay, after following Steve's email, I have managed to make the QRC work, and it has extracted the spice level of netlist and dumped in the folder of ~/UMC_18_lib/PLL_config.sp
+
+
+Just follow what Steve mentioned in the email and it should work.
+
+I can try to use it later on on the PLL_N_CONIG.
+
+
+## 22 Sep
+
+Thank god Steve has helped me fix the problem with the design and integrate them together.
+
+
+## 23 Sep
+
+We have received the feedback from IMEC and now we are working on the reported errors and warnings.
+
