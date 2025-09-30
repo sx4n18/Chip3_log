@@ -528,3 +528,17 @@ Thank god Steve has helped me fix the problem with the design and integrate them
 
 We have received the feedback from IMEC and now we are working on the reported errors and warnings.
 
+
+
+## 25 Sep
+
+I have set up the tool Klayout to view the DRC error markups on the gds as needed.
+
+And now we have V1_0_22_Sep, where the design was originally sent on 22 Sep and the initial feedback from IMEC was sent on the night of 22 Sep.
+
+After furhter communication, we realised that cell replacment has been mistaken where generic core cells are replaced with the ones from MMRF instead of GII logic.
+
+So we have another merged GDS file with the correct generic core cells replaced, but we did not make any changes to the design.
+
+This is the version 1.1 V1_1_22_Sep.
+
