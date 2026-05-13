@@ -334,7 +334,7 @@ I think I have managed to get the simulation working with just purely the PLL an
 But I still do not have the clock doubler.
 
 
-<<<<<<< HEAD
+
 ## 12 Sep
 
 I have verified the normal function behaviour for the structured design, now I will draft the testbench for the module to do Built-in self test and also test on functional mode (where users will identify the parameter N, M themselves)
@@ -378,7 +378,7 @@ I will start drafting the verilog for it now.
 OK, I have finished the synthesis for this block, and this has also been verified by the gate-level simulation.
 
 Will start the layout implementation soon.
->>>>>>> 87030fa597bc09127c461363e3c81dbbaaddcc1d
+
 
 Okay, due to the logic simplicity, Genus has generated a netlist that contains scan flip flop when I actually dont need one.
 
@@ -454,7 +454,7 @@ I will now verify the gate-level behaviour.
 
 Okay, gate-level simulation has been verified to be working well.
 
-![Gate level simulation with delay inserted has passed the naked eye examine for behaivour](/home/j05003sx/MD_log/Chip3_rush/img/gate_level_simulation_of_the_design_for_counter_300MHZ_and_muxed_by_select_signals.png)
+![Gate level simulation with delay inserted has passed the naked eye examine for behaivour](./img/gate_level_simulation_of_the_design_for_counter_300MHZ_and_muxed_by_select_signals.png)
 
 
 So when it comes to pins, I think I get to have max 18 pins, which should be enough for our case.
